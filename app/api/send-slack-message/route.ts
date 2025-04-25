@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err) {
-    return NextResponse.json({ err: 'Internal Server Error' }, { status: 500 });
+    console.error('Slack webhook error:', err);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
