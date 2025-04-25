@@ -15,6 +15,8 @@ export default function SlackSchedulerPage() {
   const [delayUnit, setDelayUnit] = useState<TimeUnit>('minutes');
   const [message, setMessage] = useState<string>('');
   const [hookUrl, setHookUrl] = useState<string>('');
+  const [candidateName, setCandidateName] = useState<string>('');
+
   console.log('hookUrl:', hookUrl)
   const [isSending, setIsSending] = useState<boolean>(false);
 
@@ -33,7 +35,7 @@ export default function SlackSchedulerPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             webhookUrl: hookUrl,
-            message: message,
+            message: `From ${candidateName}'s Slack Bot: ${message}`
           }),
         });
 
@@ -64,9 +66,9 @@ export default function SlackSchedulerPage() {
     <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50">
       <h1 className="text-2xl font-semibold mb-6">Slack Message Scheduler</h1>
 
-      <div className="w-full max-w-md space-y-4 bg-white p-6 rounded shadow">
+      <div className="flex flex-col gap-[20px] w-[900px] bg-white p-[20px] rounded shadow">
         {/* Delay Input */}
-        <div className="flex space-x-2">
+        <div className="flex gap-[10px] m-[10px]">
           <input
             type="number"
             placeholder="Delay"
@@ -87,6 +89,14 @@ export default function SlackSchedulerPage() {
             <option value="hours">hours</option>
           </select>
         </div>
+
+        <input
+          type="text"
+          placeholder="Your Name"
+          value={candidateName}
+          onChange={(e) => setCandidateName(e.target.value)}
+          className="border p-2 rounded w-full"
+        />
 
         {/* Slack Message Input */}
         <input
