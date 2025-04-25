@@ -68,7 +68,7 @@ export default function SlackSchedulerPage() {
 
       <div className="flex flex-col gap-[20px] w-[900px] bg-white p-[20px] rounded shadow">
         {/* Delay Input */}
-        <div className="flex gap-[10px] m-[10px]">
+        <div className="flex gap-[10px]">
           <input
             type="number"
             placeholder="Delay"
@@ -77,12 +77,12 @@ export default function SlackSchedulerPage() {
             onChange={(e) =>
               setDelayAmount(e.target.value === '' ? '' : Number(e.target.value))
             }
-            className="border p-[20px] rounded w-1/2"
+            className="border p-2 rounded w-1/2"
           />
           <select
             value={delayUnit}
             onChange={(e) => setDelayUnit(e.target.value as TimeUnit)}
-            className="border p-[5px] rounded w-1/2"
+            className="border p-2 rounded w-1/2"
           >
             <option value="seconds">seconds</option>
             <option value="minutes">minutes</option>
