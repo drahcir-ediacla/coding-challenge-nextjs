@@ -1,7 +1,6 @@
 'use client'; // Only needed if you're using the App Router
 
 import { useState } from 'react';
-import Button from './_components/Button';
 
 type TimeUnit = 'seconds' | 'minutes' | 'hours';
 
