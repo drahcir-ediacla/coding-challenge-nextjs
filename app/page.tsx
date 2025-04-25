@@ -1,6 +1,7 @@
 'use client'; // Only needed if you're using the App Router
 
 import { useState } from 'react';
+import Button from './_components/Button';
 
 type TimeUnit = 'seconds' | 'minutes' | 'hours';
 
@@ -15,6 +16,7 @@ export default function SlackSchedulerPage() {
   const [delayUnit, setDelayUnit] = useState<TimeUnit>('minutes');
   const [message, setMessage] = useState<string>('');
   const [hookUrl, setHookUrl] = useState<string>('');
+  console.log('hookUrl:', hookUrl)
   const [isSending, setIsSending] = useState<boolean>(false);
 
   const isFormValid = delayAmount !== '' && message.trim() !== '' && hookUrl.trim() !== '';
@@ -23,31 +25,36 @@ export default function SlackSchedulerPage() {
     if (!isFormValid || isSending) return;
 
     const delayInMs = Number(delayAmount) * timeUnits[delayUnit];
-
     setIsSending(true);
 
     setTimeout(async () => {
       try {
-        const response = await fetch(hookUrl, {
+        const response = await fetch('/api/send-slack-message', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: message }),
+          body: JSON.stringify({
+            webhookUrl: hookUrl,
+            message: message,
+          }),
         });
 
+        const data = await response.json();
+
         if (!response.ok) {
-          console.error('Slack message failed to send.');
+          console.error('Failed:', data.error);
           alert('Failed to send Slack message.');
         } else {
           alert('Slack message sent!');
         }
-      } catch (error) {
-        console.error('Error sending Slack message:', error);
-        alert('Something went wrong!');
+      } catch (err) {
+        console.error('Error sending:', err);
+        alert('Something went wrong.');
       } finally {
         setIsSending(false);
       }
     }, delayInMs);
   };
+
 
   const buttonLabel =
     delayAmount === ''
@@ -69,12 +76,12 @@ export default function SlackSchedulerPage() {
             onChange={(e) =>
               setDelayAmount(e.target.value === '' ? '' : Number(e.target.value))
             }
-            className="border p-2 rounded w-1/2"
+            className="border p-[20px] rounded w-1/2"
           />
           <select
             value={delayUnit}
             onChange={(e) => setDelayUnit(e.target.value as TimeUnit)}
-            className="border p-2 rounded w-1/2"
+            className="border p-[5px] rounded w-1/2"
           >
             <option value="seconds">seconds</option>
             <option value="minutes">minutes</option>
@@ -104,9 +111,8 @@ export default function SlackSchedulerPage() {
         <button
           disabled={!isFormValid || isSending}
           onClick={handleSend}
-          className={`w-full py-2 px-4 rounded text-white ${
-            isFormValid ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400'
-          }`}
+          className={`w-full py-2 px-4 rounded text-white ${isFormValid ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400'
+            }`}
         >
           {isSending ? 'Scheduling...' : buttonLabel}
         </button>
