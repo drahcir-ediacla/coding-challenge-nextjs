@@ -20,7 +20,7 @@ export default function SlackSchedulerPage() {
   console.log('hookUrl:', hookUrl)
   const [isSending, setIsSending] = useState<boolean>(false);
 
-  const isFormValid = delayAmount !== '' && message.trim() !== '' && hookUrl.trim() !== '';
+  const isFormValid = delayAmount !== '' && message.trim() !== '' && hookUrl.trim() !== '' && candidateName.trim() !== '';
 
   const handleSend = async () => {
     if (!isFormValid || isSending) return;
